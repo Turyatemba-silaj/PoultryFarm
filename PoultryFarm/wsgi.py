@@ -19,8 +19,13 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'PoultryFarm.settings')
 
 application = get_wsgi_application()
 
-if settings.IS_VERCEL and not os.environ.get('DATABASE_URL'):
+
+def run_startup_tasks():
+    if not settings.IS_VERCEL:
+        return
+
     call_command('migrate', interactive=False, verbosity=0)
+    bootstrap_superuser()
 
 
 def bootstrap_superuser():
@@ -48,6 +53,6 @@ def bootstrap_superuser():
 
 
 try:
-    bootstrap_superuser()
+    run_startup_tasks()
 except (OperationalError, ProgrammingError):
     pass
