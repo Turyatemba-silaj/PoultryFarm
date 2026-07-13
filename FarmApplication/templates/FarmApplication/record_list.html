@@ -1,0 +1,91 @@
+{% extends "FarmApplication/base.html" %}
+
+{% block content %}
+<nav class="tabs">
+    {% for card in cards %}
+        <a class="tab {% if card.active %}active{% endif %}" href="{% url 'record_list' card.slug %}">
+            {{ card.title }} {{ card.balance }}
+        </a>
+    {% endfor %}
+</nav>
+
+<section class="panel" style="margin-bottom:18px">
+    <div class="toolbar" style="margin-bottom:0">
+        <h2 style="margin:0">{{ title }}</h2>
+        <div class="actions">
+            <input class="form-control search-box" id="tableSearch" type="search" placeholder="Search {{ title|lower }}...">
+            <a class="button" href="{% url 'record_create' record_type %}">Add New</a>
+        </div>
+    </div>
+</section>
+
+<section class="table-card">
+    <div class="table-scroll">
+        <table id="recordsTable">
+            <thead>
+                <tr>
+                    {% for label in field_labels %}
+                        <th>{{ label }}</th>
+                    {% endfor %}
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        {% for value in row.values %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                        <td class="actions">
+                            <a class="button secondary small" href="{% url 'record_update' record_type row.record.pk %}">Edit</a>
+                            <a class="button danger small" href="{% url 'record_delete' record_type row.record.pk %}">Delete</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="20"><div class="empty-state">No records</div></td></tr>
+                {% endfor %}
+            </tbody>
+            {% if table_footer %}
+                <tfoot>
+                    <tr>
+                        {% for cell in table_footer.cells %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                        <td></td>
+                    </tr>
+                </tfoot>
+            {% endif %}
+        </table>
+    </div>
+</section>
+<p class="footer-note" id="resultCount">{{ rows|length }}</p>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const tableSearch = document.getElementById("tableSearch");
+    const tableRows = document.querySelectorAll("#recordsTable tbody tr");
+    const resultCount = document.getElementById("resultCount");
+
+    function updateVisibleRows() {
+        const query = tableSearch.value.trim().toLowerCase();
+        let visible = 0;
+        tableRows.forEach(function (row) {
+            const text = row.innerText.toLowerCase();
+            const matches = text.includes(query);
+            row.style.display = matches ? "" : "none";
+            if (matches) visible += 1;
+        });
+        if (resultCount) {
+            resultCount.innerText = visible;
+        }
+    }
+
+    if (tableSearch) {
+        tableSearch.addEventListener("input", updateVisibleRows);
+    }
+</script>
+{% endblock %}
+
+
+

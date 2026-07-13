@@ -1,0 +1,115 @@
+{% extends "FarmApplication/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="dashboard-visual" aria-label="Poultry farm image">
+    <img src="{% static 'FarmApplication/images/poultry-dashboard-banner.png' %}" alt="Healthy laying hens and egg trays inside a poultry house">
+</section>
+<section class="panel hero-copy" style="margin-bottom:14px">
+    <h2>Farm performance</h2>
+    <div class="quick-actions">
+        <a class="button" href="{% url 'record_create' 'egg-production' %}">Add Egg Production</a>
+        <a class="button secondary" href="{% url 'record_create' 'sales' %}">Record Sale</a>
+        <a class="button ghost" href="{% url 'record_create' 'feed-consumption' %}">Log Feed Use</a>
+    </div>
+</section>
+
+<section class="metrics-grid">
+    {% for metric in metrics %}
+        <article class="metric-card {{ metric.tone }}">
+            <span class="metric-label">{{ metric.label }}</span>
+            <strong class="metric-value">{{ metric.value }}</strong>
+        </article>
+    {% endfor %}
+</section>
+
+<section class="panel">
+    <div class="toolbar">
+        <h2 style="margin:0">Quantities</h2>
+    </div>
+    <div class="module-grid">
+        {% for item in quantity_cards %}
+            <a class="module-card" href="{% url 'record_list' item.url %}">
+                <div class="module-top">
+                    <strong>{{ item.label }}</strong>
+                    <span class="module-icon">{{ item.label|first }}</span>
+                </div>
+                <span class="module-count">{{ item.value }}</span>
+            </a>
+        {% endfor %}
+    </div>
+</section>
+<section class="panel report-panel">
+    <div class="toolbar">
+        <h2 style="margin:0">Reports</h2>
+        <form class="report-controls" method="get" action="{% url 'dashboard' %}">
+            <label>
+                Report
+                <select class="form-control" name="report_type">
+                    {% for slug, label in report_types.items %}
+                        <option value="{{ slug }}" {% if slug == selected_report_type %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>
+                Period
+                <select class="form-control" name="report_period">
+                    {% for slug, label in report_periods.items %}
+                        <option value="{{ slug }}" {% if slug == selected_report_period %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>
+                Date
+                <input class="form-control" type="date" name="report_date" value="{{ selected_report_date|date:'Y-m-d' }}">
+            </label>
+            <button class="button" type="submit">Run</button>
+        </form>
+    </div>
+</section>
+
+<section class="table-card report-card detail-report-card">
+    <div class="report-detail-title">
+        <h3>{{ report.detail_report.title }}</h3>
+        <span>{{ report.period_label }} {{ report.report_type_label|lower }} report</span>
+    </div>
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    {% for column in report.detail_report.columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in report.detail_report.rows %}
+                    <tr>
+                        {% for cell in row.cells %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="{{ report.detail_report.columns|length }}"><div class="empty-state">{{ report.detail_report.empty_message }}</div></td></tr>
+                {% endfor %}
+            </tbody>
+            {% if report.detail_report.footer %}
+                <tfoot>
+                    <tr>
+                        {% for cell in report.detail_report.footer %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                </tfoot>
+            {% endif %}
+        </table>
+    </div>
+</section>
+{% endblock %}
+
+
+
+
+
+
+

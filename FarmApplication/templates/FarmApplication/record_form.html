@@ -1,0 +1,26 @@
+{% extends "FarmApplication/base.html" %}
+
+{% block content %}
+<section class="panel" style="margin-bottom:18px">
+    <div class="toolbar" style="margin-bottom:0">
+        <h2 style="margin:0">{{ title }}</h2>
+        <a class="button ghost" href="{% url 'record_list' record_type %}">Back</a>
+    </div>
+</section>
+
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="field">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.errors %}<div class="errors">{{ field.errors }}</div>{% endif %}
+        </div>
+    {% endfor %}
+    {% if form.non_field_errors %}<div class="errors">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="actions">
+        <button class="button" type="submit">Save</button>
+        <a class="button secondary" href="{% url 'record_list' record_type %}">Cancel</a>
+    </div>
+</form>
+{% endblock %}

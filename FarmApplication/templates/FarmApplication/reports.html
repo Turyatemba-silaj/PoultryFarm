@@ -1,0 +1,88 @@
+{% extends "FarmApplication/base.html" %}
+
+{% block content %}
+<nav class="tabs">
+    {% for item in periods %}
+        <a class="tab {% if item.active %}active{% endif %}" href="{% url 'reports' item.slug %}">{{ item.label }}</a>
+    {% endfor %}
+</nav>
+
+<section class="panel" style="margin-bottom:12px">
+    <div class="toolbar" style="margin-bottom:0">
+        <h2 style="margin:0">{{ summary.period_label }} Report</h2>
+        <span class="module-caption">{{ summary.start }} to {{ summary.end }}</span>
+    </div>
+</section>
+
+<section class="metrics-grid">
+    {% for metric in summary.metrics %}
+        <article class="metric-card {{ metric.tone }}">
+            <span class="metric-label">{{ metric.label }}</span>
+            <strong class="metric-value">{{ metric.value }}</strong>
+        </article>
+    {% endfor %}
+</section>
+
+<section class="table-card">
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Report Item</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in summary.rows %}
+                    <tr>
+                        <td>{{ row.label }}</td>
+                        <td>{{ row.value }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="2"><div class="empty-state">No report data</div></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="table-card report-card detail-report-card">
+    <div class="report-detail-title">
+        <h3>{{ summary.detail_report.title }}</h3>
+        <span>{{ summary.period_label }} {{ summary.report_type_label|lower }} report</span>
+    </div>
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    {% for column in summary.detail_report.columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in summary.detail_report.rows %}
+                    <tr>
+                        {% for cell in row.cells %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="{{ summary.detail_report.columns|length }}"><div class="empty-state">{{ summary.detail_report.empty_message }}</div></td></tr>
+                {% endfor %}
+            </tbody>
+            {% if summary.detail_report.footer %}
+                <tfoot>
+                    <tr>
+                        {% for cell in summary.detail_report.footer %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                </tfoot>
+            {% endif %}
+        </table>
+    </div>
+</section>
+{% endblock %}
+
+

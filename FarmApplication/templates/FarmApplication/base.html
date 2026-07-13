@@ -1,0 +1,311 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title|default:"Poultry Farm" }}</title>
+    <style>
+        :root {
+            --bg: #f4f6f8;
+            --surface: #ffffff;
+            --surface-soft: #f8fafc;
+            --text: #172033;
+            --muted: #667085;
+            --line: #d9e0ea;
+            --primary: #176b87;
+            --primary-dark: #0f4c5c;
+            --green: #21835b;
+            --amber: #b7791f;
+            --rose: #be3b5d;
+            --purple: #6956b8;
+            --blue: #2563a8;
+            --danger: #b42318;
+            --shadow: 0 18px 45px rgba(23, 32, 51, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        a { color: inherit; }
+        .app-shell { display: grid; grid-template-columns: 260px minmax(0, 1fr); min-height: 100vh; }
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            background: #132238;
+            color: #eef4ff;
+            padding: 24px 18px;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; text-decoration: none; }
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: #f7c948;
+            color: #132238;
+            font-weight: 800;
+        }
+        .brand-mark img {
+            width: 36px;
+            height: 36px;
+            display: block;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .brand-title { font-size: 15px; font-weight: 800; letter-spacing: 0; }
+        .brand-subtitle { color: #a9b7cb; font-size: 11px; }
+        .nav-section { color: #a9b7cb; font-size: 10px; font-weight: 700; margin: 22px 10px 8px; text-transform: uppercase; }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 11px 12px;
+            margin-bottom: 6px;
+            border-radius: 8px;
+            color: #dce7f5;
+            text-decoration: none;
+        }
+        .nav-link:hover, .nav-link.active { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .nav-count { color: #c6d2e3; font-size: 10px; }
+        .content { min-width: 0; }
+        .top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 22px 32px;
+            background: rgba(255, 255, 255, 0.85);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(12px);
+        }
+        .page-title { margin: 0; font-size: 20px; letter-spacing: 0; }
+        .page-subtitle { margin: 3px 0 0; color: var(--muted); }
+        main { padding: 28px 32px 42px; }
+        .hero-panel {
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+        .panel, .metric-card, .module-card, .table-card, form {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        .panel { padding: 12px; }
+        .hero-copy h2 { margin: 0 0 6px; font-size: 20px; }
+        .hero-copy p { max-width: 680px; margin: 0; color: var(--muted); }
+        .quick-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+        .dashboard-visual {
+            position: relative;
+            min-height: 190px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            background: var(--surface);
+        }
+        .dashboard-visual img {
+            width: 100%;
+            height: 100%;
+            min-height: 190px;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+        }
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 34px;
+            border: 0;
+            border-radius: 7px;
+            background: var(--primary);
+            color: white;
+            padding: 7px 11px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .button:hover { background: var(--primary-dark); }
+        .button.secondary { background: #536171; }
+        .button.danger { background: var(--danger); }
+        .button.ghost { background: var(--surface-soft); color: var(--text); border: 1px solid var(--line); }
+        .button.small { min-height: 34px; padding: 7px 10px; font-size: 11px; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 8px; margin-bottom: 12px; }
+        .metric-card { padding: 9px 10px; min-height: 74px; border-top: 3px solid var(--primary); }
+        .metric-card.blue { border-top-color: var(--blue); }
+        .metric-card.green { border-top-color: var(--green); }
+        .metric-card.amber { border-top-color: var(--amber); }
+        .metric-card.rose { border-top-color: var(--rose); }
+        .metric-card.purple { border-top-color: var(--purple); }
+        .metric-label { color: var(--muted); font-size: 10px; font-weight: 700; white-space: nowrap; }
+        .metric-value { display: block; margin-top: 3px; font-size: 14px; font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; }
+        .metric-detail { margin-top: 4px; color: var(--muted); font-size: 11px; }
+        .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); gap: 8px; }
+        .module-card { padding: 9px 10px; text-decoration: none; overflow: hidden; transition: transform 0.15s ease, border-color 0.15s ease; }
+        .module-card:hover { transform: translateY(-2px); border-color: var(--primary); }
+        .module-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+        .module-top strong { min-width: 0; white-space: nowrap; font-size: 11px; }
+        .module-icon { width: 22px; height: 22px; flex: 0 0 22px; display: grid; place-items: center; border-radius: 7px; background: var(--surface-soft); font-weight: 800; font-size: 11px; }
+        .module-count { display: block; margin-top: 6px; font-size: 14px; font-weight: 800; }
+        .module-caption { color: var(--muted); font-size: 11px; }
+        .activity-list { display: grid; gap: 10px; margin-top: 14px; }
+        .activity-item { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+        .activity-item:last-child { border-bottom: 0; }
+        .activity-type { color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; }
+        .activity-date { color: var(--muted); white-space: nowrap; }
+        .toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+        .search-box { min-width: 260px; max-width: 420px; flex: 1; }
+        .form-control {
+            width: 100%;
+            min-height: 34px;
+            padding: 9px 11px;
+            border: 1px solid #c8d2df;
+            border-radius: 7px;
+            background: #fff;
+            color: var(--text);
+        }
+        .form-control:focus { outline: 3px solid rgba(23, 107, 135, 0.16); border-color: var(--primary); }
+        .report-panel { padding: 8px 10px; margin-top: 10px; margin-bottom: 8px; }
+        .report-panel .toolbar { gap: 8px; margin-bottom: 0; }
+        .report-panel h2 { font-size: 15px; }
+        .report-controls {
+            display: grid;
+            grid-template-columns: minmax(140px, 170px) minmax(110px, 145px) minmax(120px, 150px) auto;
+            gap: 6px;
+            align-items: end;
+            padding: 0;
+            max-width: none;
+            border: 0;
+            box-shadow: none;
+            background: transparent;
+        }
+        .report-controls label { display: grid; gap: 3px; font-size: 10px; font-weight: 700; color: var(--muted); }
+        .report-controls .form-control { min-height: 30px; padding: 6px 8px; font-size: 12px; }
+        .report-controls .button { min-height: 30px; padding: 6px 10px; }
+        .report-card table { min-width: 520px; }
+        .report-card th, .report-card td { padding: 6px 9px; font-size: 12px; }
+        .report-card th { font-size: 9px; }
+        .detail-report-card { margin-top: 12px; }
+        .report-detail-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--line);
+        }
+        .report-detail-title h3 { margin: 0; font-size: 14px; }
+        .report-detail-title span { color: var(--muted); font-size: 11px; }
+        .detail-report-card table { min-width: 720px; }
+        .tabs { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 18px; padding-bottom: 2px; }
+        .tab { white-space: nowrap; font-size: 12px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 7px; background: white; text-decoration: none; color: var(--muted); }
+        .tab.active { background: #e8f4f8; color: var(--primary-dark); border-color: #9dc9d7; font-weight: 700; }
+        .table-card { overflow: hidden; }
+        .table-scroll { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 760px; }
+        th, td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+        th { background: #edf2f7; color: #344054; font-size: 10px; text-transform: uppercase; }
+        tbody tr:hover { background: #f8fbfd; }
+        tfoot td { background: #eef6f4; font-weight: 800; border-top: 2px solid var(--primary); }
+        .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .empty-state { padding: 30px; text-align: center; color: var(--muted); }
+        form { max-width: 760px; padding: 22px; }
+        .field { margin-bottom: 16px; }
+        .field label { display: block; margin-bottom: 7px; font-weight: 700; }
+        .errors { color: var(--danger); margin-top: 6px; }
+        .footer-note { margin-top: 18px; color: var(--muted); font-size: 11px; }
+
+        @media (max-width: 980px) {
+            .app-shell { grid-template-columns: 1fr; }
+            .sidebar { position: static; height: auto; }
+            .hero-panel, .metrics-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 680px) {
+            .top-header, main { padding-left: 18px; padding-right: 18px; }
+            .hero-panel, .metrics-grid { grid-template-columns: 1fr; }
+            .dashboard-visual, .dashboard-visual img { min-height: 145px; }
+            .top-header, .toolbar { align-items: flex-start; flex-direction: column; }
+            .button { width: 100%; }
+            .report-controls { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" href="{% url 'dashboard' %}">
+                <span class="brand-mark" aria-label="Poultry Farm logo"><img src="{% static 'FarmApplication/images/business-logo-chick.png' %}" alt="Poultry Farm logo"></span>
+                <span>
+                    <span class="brand-title">Poultry Farm</span><br>
+                    <span class="brand-subtitle">Operations dashboard</span>
+                </span>
+            </a>
+            <div class="nav-section">Main</div>
+            <a class="nav-link" href="{% url 'dashboard' %}"><span>Dashboard</span></a>
+            <div class="nav-section">Records</div>
+            <a class="nav-link" href="{% url 'record_list' 'purchases' %}"><span>Purchases</span></a>
+            <a class="nav-link" href="{% url 'record_list' 'feed-mixes' %}"><span>Feed Mixes</span></a>
+            <a class="nav-link" href="{% url 'record_list' 'feed-consumption' %}"><span>Feed Consumption</span></a>
+            <a class="nav-link" href="{% url 'record_list' 'egg-production' %}"><span>Egg Production</span></a>
+            <a class="nav-link" href="{% url 'record_list' 'sales' %}"><span>Sales</span></a>
+        </aside>
+        <section class="content">
+            <header class="top-header">
+                <div>
+                    <h1 class="page-title">{{ title|default:"Dashboard" }}</h1>
+                    
+                </div>
+                                <div class="actions">
+                    <a class="button ghost" href="/admin/">Admin</a>
+                    {% if user.is_authenticated %}
+                        <a class="button ghost" href="{% url 'password_change' %}">Change Password</a>
+                        <form method="post" action="{% url 'logout' %}" style="display:inline; padding:0; border:0; box-shadow:none; background:transparent; max-width:none">
+                            {% csrf_token %}
+                            <button class="button ghost" type="submit">Logout</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </header>
+            <main>{% block content %}{% endblock %}</main>
+        </section>
+    </div>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
