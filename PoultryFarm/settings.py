@@ -11,12 +11,14 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 import os
+import tempfile
 from pathlib import Path
 
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+IS_VERCEL = os.environ.get('VERCEL') == '1'
 
 
 # Quick-start development settings - unsuitable for production
@@ -98,10 +100,11 @@ if DATABASE_URL:
         )
     }
 else:
+    sqlite_path = Path(tempfile.gettempdir()) / 'poultryfarm.sqlite3' if IS_VERCEL else BASE_DIR / 'db.sqlite3'
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': sqlite_path,
         }
     }
 
@@ -152,6 +155,7 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 
 
