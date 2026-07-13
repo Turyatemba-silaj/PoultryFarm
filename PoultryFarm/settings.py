@@ -18,7 +18,7 @@ import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-IS_VERCEL = os.environ.get('VERCEL') == '1'
+IS_VERCEL = any(os.environ.get(name) for name in ('VERCEL', 'VERCEL_ENV', 'VERCEL_URL'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -155,6 +155,7 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 
 

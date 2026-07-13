@@ -50,9 +50,12 @@ def bootstrap_superuser():
     user.is_superuser = True
     user.set_password(password)
     user.save()
+    print(f'Vercel admin bootstrap ready: {username}')
 
 
 try:
     run_startup_tasks()
 except (OperationalError, ProgrammingError):
     pass
+
+
