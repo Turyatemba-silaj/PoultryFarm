@@ -2,15 +2,17 @@
 {% load static %}
 
 {% block content %}
-<section class="dashboard-visual" aria-label="Poultry farm image">
-    <img src="{% static 'FarmApplication/images/poultry-dashboard-banner.png' %}" alt="Healthy laying hens and egg trays inside a poultry house">
-</section>
-<section class="panel hero-copy" style="margin-bottom:14px">
-    <h2>Farm performance</h2>
-    <div class="quick-actions">
-        <a class="button" href="{% url 'record_create' 'egg-production' %}">Add Egg Production</a>
-        <a class="button secondary" href="{% url 'record_create' 'sales' %}">Record Sale</a>
-        <a class="button ghost" href="{% url 'record_create' 'feed-consumption' %}">Log Feed Use</a>
+<section class="dashboard-hero">
+    <div class="dashboard-visual" aria-label="Poultry farm image">
+        <img src="{% static 'FarmApplication/images/poultry-dashboard-banner.png' %}" alt="Healthy laying hens and egg trays inside a poultry house">
+    </div>
+    <div class="panel hero-copy">
+        <h2>Farm performance</h2>
+        <div class="quick-actions">
+            <a class="button" href="{% url 'record_create' 'egg-production' %}">Add Egg Production</a>
+            <a class="button secondary" href="{% url 'record_create' 'sales' %}">Record Sale</a>
+            <a class="button ghost" href="{% url 'record_create' 'feed-consumption' %}">Log Feed Use</a>
+        </div>
     </div>
 </section>
 
