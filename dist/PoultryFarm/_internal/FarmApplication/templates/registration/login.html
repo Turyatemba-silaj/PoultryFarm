@@ -6,24 +6,16 @@
 <form method="post">
     {% csrf_token %}
     <div class="field">
-        <label class="sr-only" for="id_username">Username</label>
+        <label for="id_username">Username</label>
         {{ form.username }}
     </div>
     <div class="field">
-        <label class="sr-only" for="id_password">Password</label>
+        <label for="id_password">Password</label>
         {{ form.password }}
     </div>
     <button class="button" type="submit">Login</button>
     <div class="links"><a href="{% url 'password_reset' %}">Reset Password</a></div>
 </form>
-<section class="login-log" aria-label="Update log">
-    <h2>Update log</h2>
-    <ul>
-        <li>Login access updated for the Vercel deployment.</li>
-        <li>Dashboard poultry banner refreshed.</li>
-        <li>Brand logo refreshed across account pages.</li>
-    </ul>
-</section>
 {% endblock %}
 
 
