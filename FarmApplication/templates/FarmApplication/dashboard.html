@@ -9,9 +9,9 @@
     <div class="panel hero-copy">
         <h2>Farm performance</h2>
         <div class="quick-actions">
-            <a class="button" href="{% url 'record_create' 'egg-production' %}">Add Egg Production</a>
-            <a class="button secondary" href="{% url 'record_create' 'sales' %}">Record Sale</a>
-            <a class="button ghost" href="{% url 'record_create' 'feed-consumption' %}">Log Feed Use</a>
+            <a class="button" href="{% url 'record_create' 'egg-production' %}" data-modal-url="{% url 'record_create' 'egg-production' %}">Add Egg Production</a>
+            <a class="button secondary" href="{% url 'record_create' 'sales' %}" data-modal-url="{% url 'record_create' 'sales' %}">Record Sale</a>
+            <a class="button ghost" href="{% url 'record_create' 'feed-consumption' %}" data-modal-url="{% url 'record_create' 'feed-consumption' %}">Log Feed Use</a>
         </div>
     </div>
 </section>

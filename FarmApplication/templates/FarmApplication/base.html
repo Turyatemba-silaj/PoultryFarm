@@ -236,6 +236,56 @@
         .field label { display: block; margin-bottom: 7px; font-weight: 700; }
         .errors { color: var(--danger); margin-top: 6px; }
         .footer-note { margin-top: 18px; color: var(--muted); font-size: 11px; }
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 30;
+            display: none;
+            place-items: center;
+            padding: 18px;
+            background: rgba(19, 34, 56, 0.56);
+        }
+        .modal-backdrop.open { display: grid; }
+        .modal-panel {
+            width: min(720px, 100%);
+            max-height: min(760px, calc(100vh - 36px));
+            overflow: auto;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: 0 28px 70px rgba(19, 34, 56, 0.28);
+        }
+        .modal-header {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 18px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--line);
+        }
+        .modal-header h2 { margin: 0; font-size: 17px; }
+        .modal-close {
+            width: 34px;
+            height: 34px;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            background: var(--surface-soft);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 22px;
+            line-height: 1;
+        }
+        .modal-form {
+            max-width: none;
+            margin: 0;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
 
         @media (max-width: 980px) {
             .app-shell { grid-template-columns: 1fr; }
@@ -292,6 +342,94 @@
         </section>
     </div>
     {% block scripts %}{% endblock %}
+    <div class="modal-backdrop" id="formModal" aria-hidden="true">
+        <div class="modal-panel" role="dialog" aria-modal="true" aria-live="polite">
+            <div id="formModalContent"></div>
+        </div>
+    </div>
+    <script>
+        (function () {
+            const modal = document.getElementById("formModal");
+            const modalContent = document.getElementById("formModalContent");
+            if (!modal || !modalContent) return;
+
+            function withModalParam(url) {
+                const modalUrl = new URL(url, window.location.href);
+                modalUrl.searchParams.set("modal", "1");
+                return modalUrl.toString();
+            }
+
+            function openModal(html) {
+                modalContent.innerHTML = html;
+                modal.classList.add("open");
+                modal.setAttribute("aria-hidden", "false");
+                const firstField = modalContent.querySelector("input, select, textarea, button");
+                if (firstField) firstField.focus();
+            }
+
+            function closeModal() {
+                modal.classList.remove("open");
+                modal.setAttribute("aria-hidden", "true");
+                modalContent.innerHTML = "";
+            }
+
+            async function loadModal(url) {
+                const response = await fetch(withModalParam(url), {
+                    headers: { "X-Requested-With": "XMLHttpRequest" },
+                    credentials: "same-origin"
+                });
+                if (!response.ok) throw new Error("Unable to load form");
+                openModal(await response.text());
+            }
+
+            document.addEventListener("click", function (event) {
+                const closeButton = event.target.closest("[data-modal-close]");
+                if (closeButton) {
+                    closeModal();
+                    return;
+                }
+
+                if (event.target === modal) {
+                    closeModal();
+                    return;
+                }
+
+                const trigger = event.target.closest("[data-modal-url]");
+                if (!trigger) return;
+                event.preventDefault();
+                loadModal(trigger.getAttribute("data-modal-url") || trigger.href).catch(function () {
+                    window.location.href = trigger.href;
+                });
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape" && modal.classList.contains("open")) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener("submit", async function (event) {
+                const form = event.target.closest(".modal-form");
+                if (!form) return;
+                event.preventDefault();
+                const response = await fetch(form.action, {
+                    method: form.method || "POST",
+                    body: new FormData(form),
+                    headers: { "X-Requested-With": "XMLHttpRequest" },
+                    credentials: "same-origin"
+                });
+                const contentType = response.headers.get("content-type") || "";
+                if (contentType.includes("application/json")) {
+                    const data = await response.json();
+                    if (data.success) {
+                        window.location.href = data.redirect || window.location.href;
+                    }
+                    return;
+                }
+                modalContent.innerHTML = await response.text();
+            });
+        })();
+    </script>
 </body>
 </html>
 

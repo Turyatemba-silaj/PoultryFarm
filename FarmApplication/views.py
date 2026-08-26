@@ -3,8 +3,9 @@ from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
 from .forms import EggProductionForm, FeedConsumptionForm, FeedMixForm, PasswordResetWithOldPasswordForm, PurchaseForm, SaleForm
 from .models import EggProduction, FeedConsumption, FeedMix, Purchase, Sale, get_stock_balance_for_item, get_unit_price_per_mixed_kg
@@ -135,6 +136,20 @@ def get_record_label(record_type, field):
         if field in labels:
             return labels[field]
     return get_field_label(field)
+
+
+def is_modal_request(request):
+    return request.GET.get("modal") == "1" or request.headers.get("x-requested-with") == "XMLHttpRequest"
+
+
+def render_record_form(request, context, status=200):
+    template = "FarmApplication/_record_form_modal.html" if is_modal_request(request) else "FarmApplication/record_form.html"
+    return render(request, template, context, status=status)
+
+
+def render_delete_form(request, context, status=200):
+    template = "FarmApplication/_record_delete_modal.html" if is_modal_request(request) else "FarmApplication/record_confirm_delete.html"
+    return render(request, template, context, status=status)
 
 
 def format_record_value(record_type, field, value, record):
@@ -716,18 +731,22 @@ def record_create(request, record_type):
             if record_type == "feed-consumption" and request.user.is_authenticated:
                 record.issued_by = request.user
             record.save()
+            if is_modal_request(request):
+                return JsonResponse({"success": True, "redirect": reverse("record_list", kwargs={"record_type": record_type})})
             return redirect("record_list", record_type=record_type)
     else:
         form = form_class()
 
-    return render(
+    context = {
+        "form": form,
+        "record_type": record_type,
+        "title": f"Add {config['singular']}",
+        "action_url": request.get_full_path() if is_modal_request(request) else request.path,
+    }
+    return render_record_form(
         request,
-        "FarmApplication/record_form.html",
-        {
-            "form": form,
-            "record_type": record_type,
-            "title": f"Add {config['singular']}",
-        },
+        context,
+        status=400 if request.method == "POST" and is_modal_request(request) else 200,
     )
 
 
@@ -745,18 +764,22 @@ def record_update(request, record_type, pk):
             if record_type == "feed-consumption" and request.user.is_authenticated:
                 record.issued_by = request.user
             record.save()
+            if is_modal_request(request):
+                return JsonResponse({"success": True, "redirect": reverse("record_list", kwargs={"record_type": record_type})})
             return redirect("record_list", record_type=record_type)
     else:
         form = form_class(instance=record)
 
-    return render(
+    context = {
+        "form": form,
+        "record_type": record_type,
+        "title": f"Edit {config['singular']}",
+        "action_url": request.get_full_path() if is_modal_request(request) else request.path,
+    }
+    return render_record_form(
         request,
-        "FarmApplication/record_form.html",
-        {
-            "form": form,
-            "record_type": record_type,
-            "title": f"Edit {config['singular']}",
-        },
+        context,
+        status=400 if request.method == "POST" and is_modal_request(request) else 200,
     )
 
 
@@ -767,15 +790,17 @@ def record_delete(request, record_type, pk):
 
     if request.method == "POST":
         record.delete()
+        if is_modal_request(request):
+            return JsonResponse({"success": True, "redirect": reverse("record_list", kwargs={"record_type": record_type})})
         return redirect("record_list", record_type=record_type)
 
-    return render(
+    return render_delete_form(
         request,
-        "FarmApplication/record_confirm_delete.html",
         {
             "record": record,
             "record_type": record_type,
             "title": f"Delete {config['singular']}",
+            "action_url": request.get_full_path() if is_modal_request(request) else request.path,
         },
     )
 

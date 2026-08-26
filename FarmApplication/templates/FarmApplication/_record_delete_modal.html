@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <h2>{{ title }}</h2>
+    <button class="modal-close" type="button" data-modal-close aria-label="Close">&times;</button>
+</div>
+<form class="modal-form" method="post" action="{{ action_url }}">
+    {% csrf_token %}
+    <p><strong>{{ record }}</strong></p>
+    <div class="actions">
+        <button class="button danger" type="submit">Delete</button>
+        <button class="button secondary" type="button" data-modal-close>Cancel</button>
+    </div>
+</form>

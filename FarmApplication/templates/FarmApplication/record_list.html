@@ -14,7 +14,7 @@
         <h2 style="margin:0">{{ title }}</h2>
         <div class="actions">
             <input class="form-control search-box" id="tableSearch" type="search" placeholder="Search {{ title|lower }}...">
-            <a class="button" href="{% url 'record_create' record_type %}">Add New</a>
+            <a class="button" href="{% url 'record_create' record_type %}" data-modal-url="{% url 'record_create' record_type %}">Add New</a>
         </div>
     </div>
 </section>
@@ -37,8 +37,8 @@
                             <td>{{ value }}</td>
                         {% endfor %}
                         <td class="actions">
-                            <a class="button secondary small" href="{% url 'record_update' record_type row.record.pk %}">Edit</a>
-                            <a class="button danger small" href="{% url 'record_delete' record_type row.record.pk %}">Delete</a>
+                            <a class="button secondary small" href="{% url 'record_update' record_type row.record.pk %}" data-modal-url="{% url 'record_update' record_type row.record.pk %}">Edit</a>
+                            <a class="button danger small" href="{% url 'record_delete' record_type row.record.pk %}" data-modal-url="{% url 'record_delete' record_type row.record.pk %}">Delete</a>
                         </td>
                     </tr>
                 {% empty %}
