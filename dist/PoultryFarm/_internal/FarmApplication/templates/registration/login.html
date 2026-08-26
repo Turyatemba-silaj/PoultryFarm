@@ -6,11 +6,11 @@
 <form method="post">
     {% csrf_token %}
     <div class="field">
-        <label for="id_username">Username</label>
+        <label class="sr-only" for="id_username">Username</label>
         {{ form.username }}
     </div>
     <div class="field">
-        <label for="id_password">Password</label>
+        <label class="sr-only" for="id_password">Password</label>
         {{ form.password }}
     </div>
     <button class="button" type="submit">Login</button>
