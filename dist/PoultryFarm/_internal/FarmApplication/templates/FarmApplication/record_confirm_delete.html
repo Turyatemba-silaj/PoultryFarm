@@ -1,0 +1,15 @@
+{% extends "FarmApplication/base.html" %}
+
+{% block content %}
+<section class="panel">
+    <h2 style="margin-top:0">{{ title }}</h2>
+    <p><strong>{{ record }}</strong></p>
+    <form method="post" style="box-shadow:none; border:0; padding:0; max-width:none">
+        {% csrf_token %}
+        <div class="actions">
+            <button class="button danger" type="submit">Delete</button>
+            <a class="button secondary" href="{% url 'record_list' record_type %}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

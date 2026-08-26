@@ -2,6 +2,7 @@
 URL configuration for PoultryFarm project.
 """
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -9,7 +10,13 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 from FarmApplication import views as farm_views
 
-urlpatterns = [
+urlpatterns = []
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.BUNDLE_DIR / 'FarmApplication' / 'static')
+    urlpatterns += staticfiles_urlpatterns()
+
+urlpatterns += [
     path('admin/', admin.site.urls),
     path('accounts/password_change/', auth_views.PasswordChangeView.as_view(template_name='registration/password_change_form.html', success_url='/accounts/password_change/done/'), name='password_change'),
     path('accounts/password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'), name='password_change_done'),
@@ -18,7 +25,4 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('FarmApplication.urls')),
 ]
-
-if settings.DEBUG:
-    urlpatterns += staticfiles_urlpatterns()
 

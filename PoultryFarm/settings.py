@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 import os
+import sys
 import tempfile
 from pathlib import Path
 
@@ -18,6 +19,8 @@ import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+IS_FROZEN = getattr(sys, 'frozen', False)
+BUNDLE_DIR = Path(os.environ.get('BUNDLE_DIR', getattr(sys, '_MEIPASS', BASE_DIR)))
 IS_VERCEL = any(os.environ.get(name) for name in ('VERCEL', 'VERCEL_ENV', 'VERCEL_URL'))
 
 
@@ -31,7 +34,7 @@ SECRET_KEY = os.environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False').lower() in {'1', 'true', 'yes', 'on'}
+DEBUG = IS_FROZEN or os.environ.get('DEBUG', 'False').lower() in {'1', 'true', 'yes', 'on'}
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -71,7 +74,7 @@ ROOT_URLCONF = 'PoultryFarm.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BUNDLE_DIR / 'FarmApplication' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,7 +103,12 @@ if DATABASE_URL:
         )
     }
 else:
-    sqlite_path = Path(tempfile.gettempdir()) / 'poultryfarm.sqlite3' if IS_VERCEL else BASE_DIR / 'db.sqlite3'
+    sqlite_path = Path(
+        os.environ.get(
+            'SQLITE_PATH',
+            Path(tempfile.gettempdir()) / 'poultryfarm.sqlite3' if IS_VERCEL else BASE_DIR / 'db.sqlite3',
+        )
+    )
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -149,6 +157,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BUNDLE_DIR / 'FarmApplication' / 'static',
+]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 LOGIN_URL = 'login'

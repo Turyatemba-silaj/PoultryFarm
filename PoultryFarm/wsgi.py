@@ -29,8 +29,8 @@ def run_startup_tasks():
 
 
 def bootstrap_superuser():
-    username = os.environ.get('DJANGO_SUPERUSER_USERNAME')
-    password = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
+    username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'Andrew')
+    password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'poultryFarm2026')
     email = os.environ.get('DJANGO_SUPERUSER_EMAIL', '')
 
     if not username or not password:
