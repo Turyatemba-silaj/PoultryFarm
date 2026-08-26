@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 import os
+import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -107,12 +108,14 @@ if DATABASE_URL:
         )
     }
 else:
-    sqlite_path = Path(
-        os.environ.get(
-            'SQLITE_PATH',
-            Path(tempfile.gettempdir()) / 'poultryfarm.sqlite3' if IS_VERCEL else BASE_DIR / 'db.sqlite3',
-        )
-    )
+    bundled_sqlite_path = BASE_DIR / 'db.sqlite3'
+    default_sqlite_path = Path(tempfile.gettempdir()) / 'poultryfarm.sqlite3' if IS_VERCEL else bundled_sqlite_path
+    sqlite_path = Path(os.environ.get('SQLITE_PATH', default_sqlite_path))
+
+    if IS_VERCEL and not sqlite_path.exists() and bundled_sqlite_path.exists():
+        sqlite_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(bundled_sqlite_path, sqlite_path)
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

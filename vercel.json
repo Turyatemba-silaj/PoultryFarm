@@ -1,10 +1,16 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "builds": [
     {
       "src": "PoultryFarm/wsgi.py",
       "use": "@vercel/python"
     }
   ],
+  "functions": {
+    "PoultryFarm/wsgi.py": {
+      "includeFiles": "db.sqlite3"
+    }
+  },
   "routes": [
     {
       "src": "/(.*)",
