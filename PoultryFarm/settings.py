@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'FarmApplication',
+    'FarmApplication.apps.FarmapplicationConfig',
 ]
 
 MIDDLEWARE = [
@@ -92,7 +92,11 @@ WSGI_APPLICATION = 'PoultryFarm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = (
+    os.environ.get('DATABASE_URL')
+    or os.environ.get('POSTGRES_URL')
+    or os.environ.get('POSTGRES_URL_NON_POOLING')
+)
 
 if DATABASE_URL:
     DATABASES = {
