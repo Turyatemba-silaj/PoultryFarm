@@ -1,0 +1,82 @@
+:root {
+    --primary: #20513b;
+    --secondary: #f2b84b;
+    --accent: #2f7d57;
+    --header-bg: #183d30;
+    --header-color: #ffffff;
+    --breadcrumbs-bg: #20513b;
+    --link-fg: #20513b;
+    --link-selected-fg: #183d30;
+    --button-bg: #20513b;
+    --button-hover-bg: #183d30;
+    --default-button-bg: #2f7d57;
+    --default-button-hover-bg: #20513b;
+}
+
+#header {
+    box-shadow: 0 2px 10px rgba(24, 61, 48, 0.14);
+}
+
+#branding #site-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+#branding #site-name a:link,
+#branding #site-name a:visited {
+    color: #ffffff;
+}
+
+#content h1 {
+    color: #183d30;
+    font-weight: 700;
+}
+
+.module {
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #dce6df;
+    box-shadow: 0 4px 16px rgba(24, 61, 48, 0.08);
+}
+
+.module caption,
+.inline-group h2 {
+    background: #20513b;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.module caption a:link,
+.module caption a:visited {
+    color: #ffffff;
+}
+
+div.breadcrumbs {
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.object-tools a:link,
+.object-tools a:visited,
+input[type=submit],
+.submit-row input,
+a.button {
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.dashboard #content {
+    max-width: 1180px;
+}
+
+.dashboard .module table th,
+.dashboard .module table td {
+    padding: 0.75rem 1rem;
+}
+
+.dashboard .module table th {
+    width: 100%;
+}
+
+.dashboard .module table td {
+    white-space: nowrap;
+}

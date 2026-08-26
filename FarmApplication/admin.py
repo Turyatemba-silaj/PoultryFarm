@@ -2,6 +2,10 @@ from django.contrib import admin
 
 from .models import EggProduction, FeedConsumption, FeedMix, Purchase, Sale
 
+admin.site.site_header = "Poultry Farm Administration"
+admin.site.site_title = "Poultry Farm Admin"
+admin.site.index_title = "Farm Operations Control"
+
 
 @admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):

@@ -26,6 +26,8 @@ class Purchase(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        verbose_name = "Purchase"
+        verbose_name_plural = "Purchases"
         ordering = ["-purchase_date", "-created_at"]
         indexes = [
             models.Index(fields=["item_name", "purchase_date"]),
@@ -56,6 +58,8 @@ class FeedMix(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        verbose_name = "Feed Mix"
+        verbose_name_plural = "Feed Mixes"
         ordering = ["-mixed_date", "-created_at"]
 
     @property
@@ -156,6 +160,10 @@ class FeedConsumption(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Feed Consumption"
+        verbose_name_plural = "Feed Consumption"
+
     @property
     def item_name(self):
         if not self.feed_mix:
@@ -211,6 +219,10 @@ class EggProduction(models.Model):
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Egg Production"
+        verbose_name_plural = "Egg Production"
+
     @property
     def trays_for_sale(self):
         return self.total_eggs - self.broken_eggs
@@ -252,6 +264,10 @@ class Sale(models.Model):
     sale_date = models.DateField()
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Sale"
+        verbose_name_plural = "Sales"
 
     @property
     def total_amount(self):
