@@ -7,6 +7,10 @@
   ],
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "/FarmApplication/static/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "PoultryFarm/wsgi.py"
     }

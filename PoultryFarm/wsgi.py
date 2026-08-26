@@ -14,10 +14,18 @@ from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 from django.db import OperationalError, ProgrammingError
+from whitenoise import WhiteNoise
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'PoultryFarm.settings')
 
 application = get_wsgi_application()
+
+if settings.IS_VERCEL:
+    application = WhiteNoise(
+        application,
+        root=settings.BUNDLE_DIR / 'FarmApplication' / 'static',
+        prefix='static/',
+    )
 
 
 def run_startup_tasks():
