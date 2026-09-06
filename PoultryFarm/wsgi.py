@@ -49,6 +49,7 @@ def run_startup_tasks():
 
     call_command('migrate', interactive=False, verbosity=0)
     bootstrap_superuser()
+    load_initial_farm_data()
 
 
 def bootstrap_superuser():
@@ -74,6 +75,22 @@ def bootstrap_superuser():
     user.set_password(password)
     user.save()
     print(f'Vercel admin bootstrap ready: {username}')
+
+
+def load_initial_farm_data():
+    from FarmApplication.models import EggProduction, FeedConsumption, FeedMix, Purchase, Sale
+
+    has_farm_data = any(
+        model.objects.exists()
+        for model in (Purchase, FeedMix, FeedConsumption, EggProduction, Sale)
+    )
+    fixture_path = settings.BUNDLE_DIR / 'FarmApplication' / 'fixtures' / 'initial_data.json'
+
+    if has_farm_data or not fixture_path.exists():
+        return
+
+    call_command('loaddata', str(fixture_path), interactive=False, verbosity=0)
+    print('Loaded initial farm data fixture.')
 
 
 try:

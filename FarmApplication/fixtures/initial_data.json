@@ -1,0 +1,218 @@
+[
+{
+  "model": "FarmApplication.purchase",
+  "pk": 1,
+  "fields": {
+    "item_name": "soya",
+    "quantity": "60.00",
+    "stock": "318.00",
+    "unit_price": "500.00",
+    "purchase_date": "2026-07-11",
+    "notes": "",
+    "created_at": "2026-07-11T18:08:27.650Z",
+    "updated_at": "2026-07-11T18:11:45.615Z"
+  }
+},
+{
+  "model": "FarmApplication.purchase",
+  "pk": 2,
+  "fields": {
+    "item_name": "sunflower",
+    "quantity": "700.00",
+    "stock": "10.00",
+    "unit_price": "6000.00",
+    "purchase_date": "2026-07-10",
+    "notes": "",
+    "created_at": "2026-07-11T19:42:25.791Z",
+    "updated_at": "2026-07-11T19:42:25.791Z"
+  }
+},
+{
+  "model": "FarmApplication.purchase",
+  "pk": 3,
+  "fields": {
+    "item_name": "soya",
+    "quantity": "678.00",
+    "stock": "318.00",
+    "unit_price": "500.00",
+    "purchase_date": "2026-07-01",
+    "notes": "",
+    "created_at": "2026-07-11T19:51:35.048Z",
+    "updated_at": "2026-07-11T19:51:35.048Z"
+  }
+},
+{
+  "model": "FarmApplication.feedmix",
+  "pk": 1,
+  "fields": {
+    "purchase": 1,
+    "quantity_kg": "50.00",
+    "mixed_date": "2026-07-11",
+    "created_at": "2026-07-11T18:44:20.868Z"
+  }
+},
+{
+  "model": "FarmApplication.feedmix",
+  "pk": 2,
+  "fields": {
+    "purchase": 1,
+    "quantity_kg": "300.00",
+    "mixed_date": "2026-07-11",
+    "created_at": "2026-07-11T19:53:02.595Z"
+  }
+},
+{
+  "model": "FarmApplication.feedmix",
+  "pk": 3,
+  "fields": {
+    "purchase": 3,
+    "quantity_kg": "70.00",
+    "mixed_date": "2026-07-11",
+    "created_at": "2026-07-11T19:53:39.875Z"
+  }
+},
+{
+  "model": "FarmApplication.feedmix",
+  "pk": 4,
+  "fields": {
+    "purchase": 2,
+    "quantity_kg": "690.00",
+    "mixed_date": "2026-07-12",
+    "created_at": "2026-07-11T22:27:56.838Z"
+  }
+},
+{
+  "model": "FarmApplication.feedconsumption",
+  "pk": 1,
+  "fields": {
+    "feed_mix": 3,
+    "number_of_birds": 350,
+    "quantity_kg": "400.00",
+    "consumption_date": "2026-07-01",
+    "issued_by": [
+      "Andrew"
+    ],
+    "created_at": "2026-07-11T20:25:12.447Z"
+  }
+},
+{
+  "model": "FarmApplication.feedconsumption",
+  "pk": 2,
+  "fields": {
+    "feed_mix": 4,
+    "number_of_birds": 343,
+    "quantity_kg": "400.00",
+    "consumption_date": "2026-07-12",
+    "issued_by": [
+      "Andrew"
+    ],
+    "created_at": "2026-07-12T09:53:22.897Z"
+  }
+},
+{
+  "model": "FarmApplication.feedconsumption",
+  "pk": 3,
+  "fields": {
+    "feed_mix": 4,
+    "number_of_birds": 350,
+    "quantity_kg": "290.00",
+    "consumption_date": "2026-07-12",
+    "issued_by": [
+      "Andrew"
+    ],
+    "created_at": "2026-07-12T10:14:06.351Z"
+  }
+},
+{
+  "model": "FarmApplication.eggproduction",
+  "pk": 1,
+  "fields": {
+    "production_date": "2026-07-01",
+    "total_eggs": 700,
+    "broken_eggs": 6,
+    "tray_count": "0.00",
+    "notes": "",
+    "created_at": "2026-07-11T20:38:43.478Z"
+  }
+},
+{
+  "model": "FarmApplication.eggproduction",
+  "pk": 2,
+  "fields": {
+    "production_date": "2026-07-11",
+    "total_eggs": 800,
+    "broken_eggs": 12,
+    "tray_count": "0.00",
+    "notes": "",
+    "created_at": "2026-07-11T20:49:55.096Z"
+  }
+},
+{
+  "model": "FarmApplication.eggproduction",
+  "pk": 3,
+  "fields": {
+    "production_date": "2026-07-12",
+    "total_eggs": 500,
+    "broken_eggs": 2,
+    "tray_count": "0.00",
+    "notes": "",
+    "created_at": "2026-07-11T22:20:03.747Z"
+  }
+},
+{
+  "model": "FarmApplication.sale",
+  "pk": 1,
+  "fields": {
+    "product": "eggs",
+    "customer": "",
+    "quantity": "350.00",
+    "unit": "tray",
+    "unit_price": "12000.00",
+    "sale_date": "2026-07-12",
+    "notes": "",
+    "created_at": "2026-07-11T21:21:07.235Z"
+  }
+},
+{
+  "model": "FarmApplication.sale",
+  "pk": 2,
+  "fields": {
+    "product": "eggs",
+    "customer": "",
+    "quantity": "482.00",
+    "unit": "tray",
+    "unit_price": "13000.00",
+    "sale_date": "2026-07-12",
+    "notes": "",
+    "created_at": "2026-07-11T22:18:23.136Z"
+  }
+},
+{
+  "model": "FarmApplication.sale",
+  "pk": 3,
+  "fields": {
+    "product": "eggs",
+    "customer": "",
+    "quantity": "650.00",
+    "unit": "tray",
+    "unit_price": "14000.00",
+    "sale_date": "2026-07-08",
+    "notes": "",
+    "created_at": "2026-07-11T22:21:24.633Z"
+  }
+},
+{
+  "model": "FarmApplication.sale",
+  "pk": 4,
+  "fields": {
+    "product": "eggs",
+    "customer": "",
+    "quantity": "925.00",
+    "unit": "tray",
+    "unit_price": "14000.00",
+    "sale_date": "2026-07-12",
+    "notes": "",
+    "created_at": "2026-07-12T10:51:21.744Z"
+  }
+}
+]

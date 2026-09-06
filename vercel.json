@@ -8,7 +8,7 @@
   ],
   "functions": {
     "PoultryFarm/wsgi.py": {
-      "includeFiles": "{db.sqlite3,FarmApplication/templates/**,FarmApplication/static/**}"
+      "includeFiles": "{FarmApplication/templates/**,FarmApplication/static/**,FarmApplication/fixtures/**}"
     }
   },
   "routes": [
