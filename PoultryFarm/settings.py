@@ -11,12 +11,11 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 import os
-import shutil
 import sys
-import tempfile
 from pathlib import Path
 
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -35,7 +34,8 @@ SECRET_KEY = os.environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = IS_FROZEN or os.environ.get('DEBUG', 'False').lower() in {'1', 'true', 'yes', 'on'}
+default_debug = 'False' if IS_VERCEL else 'True'
+DEBUG = IS_FROZEN or os.environ.get('DEBUG', default_debug).lower() in {'1', 'true', 'yes', 'on'}
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -108,13 +108,13 @@ if DATABASE_URL:
         )
     }
 else:
-    bundled_sqlite_path = BASE_DIR / 'db.sqlite3'
-    default_sqlite_path = Path(tempfile.gettempdir()) / 'poultryfarm.sqlite3' if IS_VERCEL else bundled_sqlite_path
-    sqlite_path = Path(os.environ.get('SQLITE_PATH', default_sqlite_path))
+    if IS_VERCEL:
+        raise ImproperlyConfigured(
+            'Persistent database is required on Vercel. Set DATABASE_URL, '
+            'POSTGRES_URL, or POSTGRES_URL_NON_POOLING to a hosted Postgres database.'
+        )
 
-    if IS_VERCEL and not sqlite_path.exists() and bundled_sqlite_path.exists():
-        sqlite_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(bundled_sqlite_path, sqlite_path)
+    sqlite_path = Path(os.environ.get('SQLITE_PATH', BASE_DIR / 'db.sqlite3'))
 
     DATABASES = {
         'default': {
@@ -164,6 +164,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_MANIFEST_EXISTS = (STATIC_ROOT / 'staticfiles.json').exists()
 STATICFILES_DIRS = [
     BUNDLE_DIR / 'FarmApplication' / 'static',
 ]
@@ -174,7 +175,7 @@ STORAGES = {
     'staticfiles': {
         'BACKEND': (
             'django.contrib.staticfiles.storage.StaticFilesStorage'
-            if IS_VERCEL
+            if IS_VERCEL or DEBUG or not STATIC_MANIFEST_EXISTS
             else 'whitenoise.storage.CompressedManifestStaticFilesStorage'
         ),
     },

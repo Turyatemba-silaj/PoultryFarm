@@ -25,7 +25,7 @@ application = get_wsgi_application()
 
 
 def serve_static_assets(application):
-    if not settings.IS_VERCEL:
+    if settings.DEBUG:
         return application
 
     static_application = WhiteNoise(application)
